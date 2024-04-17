@@ -27,7 +27,7 @@ def handle_message(message):
     else:
       countingGameNumber = 1
       saidHighscore = False
-      return "Incorrect!, Your count is restarting"
+      return "Incorrect!, Your count is restarting. Your highscore is " + str(highscore)
   if (message.content.startswith("!") is False):
     return
   message.content = message.content[1:]
