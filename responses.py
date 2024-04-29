@@ -6,27 +6,28 @@ def TryGetValue(key, default):
   except KeyError:
     return default
 
-countingGameNumber = TryGetValue("countingGameNumber", 1)
-highscore = TryGetValue("highscore", 0)
-saidHighscore = False
-
 def handle_message(message):
-  global countingGameNumber, playingCountingGame, highscore, saidHighscore
+  countingGameNumber = TryGetValue("countingGameNumber" + str(message.channel.id), 1)
+  highscore = TryGetValue("highscore" + str(message.channel.id), 0)
+  saidHighscore = TryGetValue("saidHighscore" + str(message.channel.id), False)
   message.content = message.content.lower()
   if (message.content.isdigit()):
     if (int(message.content) == countingGameNumber):
       countingGameNumber += 1
-      db["countingGameNumber"] = countingGameNumber
+      db["countingGameNumber" + str(message.channel.id)] = countingGameNumber
       if (countingGameNumber - 1 > highscore):
         highscore = countingGameNumber - 1
-        db["highscore"] = highscore
+        db["highscore" + str(message.channel.id)] = highscore
         if (saidHighscore is False):
           saidHighscore = True
+          db["saidHighscore" + str(message.channel.id)] = saidHighscore
           return ("Congradulations, you now have a new high score!")
       return
     else:
       countingGameNumber = 1
+      db["countingGameNumber" + str(message.channel.id)] = countingGameNumber
       saidHighscore = False
+      db["saidHighscore" + str(message.channel.id)] = saidHighscore
       return "Incorrect!, Your count is restarting. Your highscore is " + str(highscore)
   if (message.content.startswith("!") is False):
     return
